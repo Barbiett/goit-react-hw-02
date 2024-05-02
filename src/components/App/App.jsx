@@ -6,23 +6,20 @@ import { useState, useEffect } from "react";
 import css from "./App.module.css";
 
 export default function App() {
-  const initFeedback =
-    { good: 0, neutral: 0, bad: 0 } ||
-    JSON.parse(localStorage.getItem(localStorageKey));
-
-  const [feedback, setFeedback] = useState(initFeedback);
   const localStorageKey = "saved-feedback";
+  const initFeedback = () => {
+    const lsData = JSON.parse(localStorage.getItem(localStorageKey));
+    if (lsData !== null) {
+      return lsData;
+    } else {
+      return { good: 0, neutral: 0, bad: 0 };
+    }
+  };
+  const [feedback, setFeedback] = useState(initFeedback());
+
   useEffect(() => {
     window.localStorage.setItem(localStorageKey, JSON.stringify(feedback));
   }, [feedback]);
-  useEffect(() => {
-    const savedFeedback = JSON.parse(
-      window.localStorage.getItem(localStorageKey)
-    );
-    if (savedFeedback !== null) {
-      setFeedback(savedFeedback);
-    }
-  }, []);
 
   function onReset() {
     const resetFeedback = {
